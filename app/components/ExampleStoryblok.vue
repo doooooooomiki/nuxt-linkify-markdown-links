@@ -1,16 +1,12 @@
 <script setup lang="ts">
 import { NuxtLink } from '#components';
+import { markdown } from '#shared/constants';
 import type { StoryblokRichTextNode } from '@storyblok/vue';
 import { StoryblokRichText } from '@storyblok/vue';
 import { MarkTypes } from '@storyblok/richtext';
 import { markdownToStoryblokRichtext } from '@storyblok/richtext/markdown-parser';
 
-const mdForceReload = 'A link to [about](/about) forcing a page reload.';
-const richtextDocForceReload = markdownToStoryblokRichtext(mdForceReload);
-
-const mdWithoutReload =
-  'A link to [about](/about) without forcing a page reload.';
-const richtextDocWithoutReload = markdownToStoryblokRichtext(mdWithoutReload);
+const richtextDoc = markdownToStoryblokRichtext(markdown);
 
 // https://www.storyblok.com/docs/packages/storyblok-nuxt#storyblokrichtext
 const resolvers = {
@@ -28,6 +24,19 @@ const resolvers = {
 
 <template>
   <h2>Storyblok</h2>
-  <StoryblokRichText :doc="richtextDocForceReload" />
-  <StoryblokRichText :doc="richtextDocWithoutReload" :resolvers="resolvers" />
+
+  <section>
+    <p>
+      🚨 This example does <strong>not</strong> use a custom link resolver, so
+      the link will force a page reload:
+    </p>
+    <StoryblokRichText :doc="richtextDoc" />
+  </section>
+  <section>
+    <p>
+      ✅ This example uses a custom link resolver, so the link will use
+      <code>&lt;NuxtLink&gt;</code> and not force a page reload:
+    </p>
+    <StoryblokRichText :doc="richtextDoc" :resolvers="resolvers" />
+  </section>
 </template>
